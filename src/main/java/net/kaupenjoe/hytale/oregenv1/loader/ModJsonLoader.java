@@ -147,7 +147,7 @@ public abstract class ModJsonLoader<K extends SeedResource, T> extends Loader<K,
                     if (pack.isImmutable() && pack.getPackLocation().getFileName().toString().toLowerCase().endsWith(".zip")) {
                         // We are in a ZIP FILE
                         try (FileSystem fs = FileSystems.newFileSystem(pack.getPackLocation(), (ClassLoader) null)) {
-                            Path manifestPath = fs.getPath("Server\\World\\KaupenOres\\" + filePath.replace('.', File.separatorChar) + ".json");
+                            Path manifestPath = fs.getPath("Server\\World\\CustomOres\\" + filePath.replace('.', File.separatorChar) + ".json");
                             if (Files.exists(manifestPath)) {
                                 try (BufferedReader reader = Files.newBufferedReader(manifestPath, StandardCharsets.UTF_8)) {
                                     char[] buffer = RawJsonReader.READ_BUFFER.get();
@@ -165,8 +165,8 @@ public abstract class ModJsonLoader<K extends SeedResource, T> extends Loader<K,
                         }
                     } else {
                         // Normal Way (NON ZIP)
-                        if (Files.exists(pack.getPackLocation().resolve("Server\\World\\KaupenOres\\" + filePath.replace('.', File.separatorChar) + ".json"))) {
-                            foundPath = pack.getPackLocation().resolve("Server\\World\\KaupenOres\\" + filePath.replace('.', File.separatorChar) + ".json");
+                        if (Files.exists(pack.getPackLocation().resolve("Server\\World\\CustomOres\\" + filePath.replace('.', File.separatorChar) + ".json"))) {
+                            foundPath = pack.getPackLocation().resolve("Server\\World\\CustomOres\\" + filePath.replace('.', File.separatorChar) + ".json");
                         }
                     }
                 }

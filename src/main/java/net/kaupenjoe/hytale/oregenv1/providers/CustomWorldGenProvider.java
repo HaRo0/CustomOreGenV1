@@ -17,9 +17,9 @@ import javax.annotation.Nonnull;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class KaupenWorldGenProvider extends HytaleWorldGenProvider {
+public class CustomWorldGenProvider extends HytaleWorldGenProvider {
 
-    public static final BuilderCodec<KaupenWorldGenProvider> CODEC = BuilderCodec.builder(KaupenWorldGenProvider.class, KaupenWorldGenProvider::new)
+    public static final BuilderCodec<CustomWorldGenProvider> CODEC = BuilderCodec.builder(CustomWorldGenProvider.class, CustomWorldGenProvider::new)
         .documentation("The standard generator for Hytale.")
         .append(new KeyedCodec<>("Name", Codec.STRING), (config, s) -> config.name = s, config -> config.name)
         .documentation("The name of the generator to use. \"*Default*\" if not provided.")

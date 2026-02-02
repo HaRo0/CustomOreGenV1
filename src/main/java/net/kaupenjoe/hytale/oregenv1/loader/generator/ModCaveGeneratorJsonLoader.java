@@ -73,7 +73,7 @@ public class ModCaveGeneratorJsonLoader extends JsonLoader<SeedStringResource, C
                 for (AssetPack pack : assetPacks) {
                     if (pack.isImmutable() && pack.getPackLocation().getFileName().toString().toLowerCase().endsWith(".zip")) {
                         try (FileSystem fs = FileSystems.newFileSystem(pack.getPackLocation(), (ClassLoader) null)) {
-                            Path manifestPath = fs.getPath("Server\\World\\KaupenOres\\CaveModifications\\CaveModifications.json");
+                            Path manifestPath = fs.getPath("Server\\World\\CustomOres\\CaveModifications\\CaveModifications.json");
                             if (Files.exists(manifestPath)) {
                                 try (BufferedReader reader = Files.newBufferedReader(manifestPath, StandardCharsets.UTF_8)) {
                                     char[] buffer = RawJsonReader.READ_BUFFER.get();
@@ -101,7 +101,7 @@ public class ModCaveGeneratorJsonLoader extends JsonLoader<SeedStringResource, C
                     } else {
                         // Normal Way (NON ZIP)
                         var path = pack.getPackLocation()
-                            .resolve("Server\\World\\KaupenOres\\CaveModifications\\CaveModifications.json");
+                            .resolve("Server\\World\\CustomOres\\CaveModifications\\CaveModifications.json");
                         if (path.toFile().exists()) {
                             try (JsonReader reader = new JsonReader(Files.newBufferedReader(path))) {
                                 modifiedCaves = JsonParser.parseReader(reader).getAsJsonObject();

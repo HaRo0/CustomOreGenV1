@@ -11,7 +11,7 @@ import com.hypixel.hytale.protocol.packets.asseteditor.AssetEditorEditorType;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 import com.hypixel.hytale.server.core.universe.world.worldgen.provider.IWorldGenProvider;
-import net.kaupenjoe.hytale.oregenv1.providers.KaupenWorldGenProvider;
+import net.kaupenjoe.hytale.oregenv1.providers.CustomWorldGenProvider;
 import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 
 import java.nio.file.Path;
@@ -28,10 +28,10 @@ public class OregenV1Plugin extends JavaPlugin {
 
         var defaultProvider = IWorldGenProvider.CODEC.getClassFor("Hytale");
         IWorldGenProvider.CODEC.remove(defaultProvider);
-        IWorldGenProvider.CODEC.register(Priority.DEFAULT.before(1), "Hytale", KaupenWorldGenProvider.class, KaupenWorldGenProvider.CODEC);
+        IWorldGenProvider.CODEC.register(Priority.DEFAULT.before(1), "Hytale", CustomWorldGenProvider.class, CustomWorldGenProvider.CODEC);
 
-        AssetEditorPlugin.get().getAssetTypeRegistry().registerAssetType(new TypeHandler("CaveModifications", "Server/World/KaupenOres/CaveModifications"));
-        AssetEditorPlugin.get().getAssetTypeRegistry().registerAssetType(new TypeHandler("ZoneData", "Server/World/KaupenOres/Ores"));
+        AssetEditorPlugin.get().getAssetTypeRegistry().registerAssetType(new TypeHandler("CaveModifications", "Server/World/CustomOres/CaveModifications"));
+        AssetEditorPlugin.get().getAssetTypeRegistry().registerAssetType(new TypeHandler("ZoneData", "Server/World/CustomOres/Ores"));
 
     }
 
