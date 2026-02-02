@@ -1,0 +1,22 @@
+{
+  "Zone1_Shore": [
+    {
+      "File": "Ores.Zone1.ExamplePlacement"
+    }
+  ],
+  "Zone1_Tier1": [
+    {
+      "File": "Ores.Zone1.ExamplePlacement"
+    }
+  ],
+  "Zone1_Tier2": [
+    {
+      "File": "Ores.Zone1.ExamplePlacement"
+    }
+  ],
+  "Zone1_Tier3": [
+    {
+      "File": "Ores.Zone1.ExamplePlacement"
+    }
+  ]
+}
