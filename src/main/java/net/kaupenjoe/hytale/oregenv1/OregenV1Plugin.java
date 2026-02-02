@@ -4,7 +4,7 @@ import com.hypixel.hytale.codec.lookup.Priority;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 import com.hypixel.hytale.server.core.universe.world.worldgen.provider.IWorldGenProvider;
-import net.kaupenjoe.hytale.KaupenWorldGenProvider;
+import net.kaupenjoe.hytale.oregenv1.providers.KaupenWorldGenProvider;
 import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 
 public class OregenV1Plugin extends JavaPlugin {

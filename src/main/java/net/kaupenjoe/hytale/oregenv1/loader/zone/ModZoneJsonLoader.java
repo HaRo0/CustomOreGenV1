@@ -1,4 +1,4 @@
-package net.kaupenjoe.hytale;
+package net.kaupenjoe.hytale.oregenv1.loader.zone;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -19,6 +19,7 @@ import com.hypixel.hytale.server.worldgen.loader.zone.ZoneBiomesJsonLoader;
 import com.hypixel.hytale.server.worldgen.loader.zone.ZoneCustomBiomesJsonLoader;
 import com.hypixel.hytale.server.worldgen.zone.Zone;
 import com.hypixel.hytale.server.worldgen.zone.ZoneDiscoveryConfig;
+import net.kaupenjoe.hytale.oregenv1.loader.generator.ModCaveGeneratorJsonLoader;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

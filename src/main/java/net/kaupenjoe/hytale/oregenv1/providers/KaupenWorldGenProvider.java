@@ -1,4 +1,4 @@
-package net.kaupenjoe.hytale;
+package net.kaupenjoe.hytale.oregenv1.providers;
 
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
@@ -11,6 +11,7 @@ import com.hypixel.hytale.server.core.universe.world.worldgen.WorldGenLoadExcept
 import com.hypixel.hytale.server.worldgen.HytaleWorldGenProvider;
 import com.hypixel.hytale.server.worldgen.SeedStringResource;
 import com.hypixel.hytale.server.worldgen.prefab.PrefabStoreRoot;
+import net.kaupenjoe.hytale.oregenv1.loader.generator.ModChunkGeneratorJsonLoader;
 
 import javax.annotation.Nonnull;
 import java.nio.file.Files;

@@ -1,4 +1,4 @@
-package net.kaupenjoe.hytale;
+package net.kaupenjoe.hytale.oregenv1.loader.type;
 
 import com.google.gson.JsonElement;
 import com.hypixel.hytale.math.util.MathUtil;
@@ -24,6 +24,7 @@ import com.hypixel.hytale.server.worldgen.loader.prefab.BlockPlacementMaskJsonLo
 import com.hypixel.hytale.server.worldgen.util.ConstantNoiseProperty;
 import com.hypixel.hytale.server.worldgen.util.condition.BlockMaskCondition;
 import com.hypixel.hytale.server.worldgen.util.condition.flag.Int2FlagsCondition;
+import net.kaupenjoe.hytale.oregenv1.loader.ModJsonLoader;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

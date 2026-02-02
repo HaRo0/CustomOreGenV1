@@ -1,4 +1,4 @@
-package net.kaupenjoe.hytale;
+package net.kaupenjoe.hytale.oregenv1.loader;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;

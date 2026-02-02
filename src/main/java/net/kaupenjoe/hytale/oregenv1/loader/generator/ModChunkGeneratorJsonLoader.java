@@ -1,4 +1,4 @@
-package net.kaupenjoe.hytale;
+package net.kaupenjoe.hytale.oregenv1.loader.generator;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -22,6 +22,7 @@ import com.hypixel.hytale.server.worldgen.loader.context.FileLoadingContext;
 import com.hypixel.hytale.server.worldgen.loader.zone.ZonePatternProviderJsonLoader;
 import com.hypixel.hytale.server.worldgen.prefab.PrefabStoreRoot;
 import com.hypixel.hytale.server.worldgen.zone.Zone;
+import net.kaupenjoe.hytale.oregenv1.loader.zone.ModZonesJsonLoader;
 
 import javax.annotation.Nonnull;
 import java.nio.file.Files;

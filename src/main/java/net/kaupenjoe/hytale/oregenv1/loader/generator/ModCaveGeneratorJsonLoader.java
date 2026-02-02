@@ -1,4 +1,4 @@
-package net.kaupenjoe.hytale;
+package net.kaupenjoe.hytale.oregenv1.loader.generator;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -14,6 +14,7 @@ import com.hypixel.hytale.server.worldgen.SeedStringResource;
 import com.hypixel.hytale.server.worldgen.cave.CaveGenerator;
 import com.hypixel.hytale.server.worldgen.cave.CaveType;
 import com.hypixel.hytale.server.worldgen.loader.context.ZoneFileContext;
+import net.kaupenjoe.hytale.oregenv1.loader.type.ModCaveTypesJsonLoader;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
