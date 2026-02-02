@@ -104,19 +104,22 @@ public class ModCaveGeneratorJsonLoader extends JsonLoader<SeedStringResource, C
                         }
                     } else {
                         // Normal Way (NON ZIP)
-                        try (JsonReader reader = new JsonReader(Files.newBufferedReader(pack.getPackLocation()
-                            .resolve("Server\\World\\KaupenOres\\CaveModifications\\CaveModifications.json")))) {
-                            modifiedCaves = JsonParser.parseReader(reader).getAsJsonObject();
+                        var path = pack.getPackLocation()
+                            .resolve("Server\\World\\KaupenOres\\CaveModifications\\CaveModifications.json");
+                        if (path.toFile().exists()) {
+                            try (JsonReader reader = new JsonReader(Files.newBufferedReader(path))) {
+                                modifiedCaves = JsonParser.parseReader(reader).getAsJsonObject();
 
-                            if (modifiedCaves.get(zoneName) != null) {
-                                oreModificationFileList = modifiedCaves.get(zoneName).getAsJsonArray();
+                                if (modifiedCaves.get(zoneName) != null) {
+                                    oreModificationFileList = modifiedCaves.get(zoneName).getAsJsonArray();
 
-                                for (JsonElement element : oreModificationFileList) {
-                                    cavesJson.get("Types").getAsJsonArray().add(element);
+                                    for (JsonElement element : oreModificationFileList) {
+                                        cavesJson.get("Types").getAsJsonArray().add(element);
+                                    }
                                 }
-                            }
 
-                            System.out.println("[FINISHED CAVE JSON]: " + cavesJson);
+                                System.out.println("[FINISHED CAVE JSON]: " + cavesJson);
+                            }
                         }
                     }
                 }
