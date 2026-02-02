@@ -14,7 +14,8 @@
     "Website": "",
     "ServerVersion": "*",
     "Dependencies": {
-        "Hytale:WorldGen": "*"
+        "Hytale:WorldGen": "*",
+        "Hytale:AssetEditor": "*"
     },
     "OptionalDependencies": {
     },
