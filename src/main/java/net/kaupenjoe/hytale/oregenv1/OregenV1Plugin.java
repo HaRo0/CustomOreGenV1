@@ -18,9 +18,12 @@ import java.nio.file.Path;
 
 public class OregenV1Plugin extends JavaPlugin {
 
+    public static OregenV1Plugin INSTANCE;
+
     public OregenV1Plugin(@NonNullDecl JavaPluginInit init) {
 
         super(init);
+        INSTANCE = this;
     }
 
     @Override

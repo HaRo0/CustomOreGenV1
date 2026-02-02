@@ -11,6 +11,7 @@ import com.hypixel.hytale.procedurallib.json.Loader;
 import com.hypixel.hytale.procedurallib.json.SeedResource;
 import com.hypixel.hytale.procedurallib.json.SeedString;
 import com.hypixel.hytale.server.core.asset.AssetModule;
+import net.kaupenjoe.hytale.oregenv1.OregenV1Plugin;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -140,7 +141,7 @@ public abstract class ModJsonLoader<K extends SeedResource, T> extends Loader<K,
                 // MODIFIED (ie. Change Location!)
                 Path foundPath = null;
                 AssetPack[] assetPacks = AssetModule.get().getAssetPacks().stream()
-                    .filter(assetPack -> !assetPack.getName().equals("Hytale:Hytale")).toArray(AssetPack[]::new);
+                    .filter(assetPack -> !assetPack.getName().equals("Hytale:Hytale") && !assetPack.getName().equals(OregenV1Plugin.INSTANCE.getName())).toArray(AssetPack[]::new);
 
                 // Path to every AssetPack (Path pathToCaveMods : pathsToCaveMods)
                 for (AssetPack pack : assetPacks) {

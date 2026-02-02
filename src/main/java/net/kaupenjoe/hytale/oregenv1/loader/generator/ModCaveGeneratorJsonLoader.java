@@ -14,6 +14,7 @@ import com.hypixel.hytale.server.worldgen.SeedStringResource;
 import com.hypixel.hytale.server.worldgen.cave.CaveGenerator;
 import com.hypixel.hytale.server.worldgen.cave.CaveType;
 import com.hypixel.hytale.server.worldgen.loader.context.ZoneFileContext;
+import net.kaupenjoe.hytale.oregenv1.OregenV1Plugin;
 import net.kaupenjoe.hytale.oregenv1.loader.type.ModCaveTypesJsonLoader;
 
 import javax.annotation.Nonnull;
@@ -65,7 +66,7 @@ public class ModCaveGeneratorJsonLoader extends JsonLoader<SeedStringResource, C
                 // Path pathToCaveMods = AssetModule.get().getAssetPack("Lexih:TestPlugin");
 
                 AssetPack[] assetPacks = AssetModule.get().getAssetPacks().stream()
-                    .filter(assetPack -> !assetPack.getName().equals("Hytale:Hytale")).toArray(AssetPack[]::new);
+                    .filter(assetPack -> !assetPack.getName().equals("Hytale:Hytale") && !assetPack.getName().equals(OregenV1Plugin.INSTANCE.getName())).toArray(AssetPack[]::new);
 
                 JsonObject modifiedCaves;
 
