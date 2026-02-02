@@ -149,24 +149,18 @@ public abstract class ModJsonLoader<K extends SeedResource, T> extends Loader<K,
                         try (FileSystem fs = FileSystems.newFileSystem(pack.getPackLocation(), (ClassLoader) null)) {
                             Path manifestPath = fs.getPath("Server\\World\\KaupenOres\\" + filePath.replace('.', File.separatorChar) + ".json");
                             if (Files.exists(manifestPath)) {
-                                // We have found a file
-                                foundPath = pack.getPackLocation().resolve("Server\\World\\KaupenOres\\" + filePath.replace('.', File.separatorChar) + ".json");
                                 try (BufferedReader reader = Files.newBufferedReader(manifestPath, StandardCharsets.UTF_8)) {
                                     char[] buffer = RawJsonReader.READ_BUFFER.get();
+                                    StringBuilder contentBuilder = new StringBuilder();
                                     int numCharsRead;
-                                    String content = "";
                                     while ((numCharsRead = reader.read(buffer)) != -1) {
-                                        // Create the string using ONLY the characters that were just read
-                                        content = new String(buffer, 0, numCharsRead);
-                                        System.out.println("[CONTENT]: " + content);
+                                        contentBuilder.append(buffer, 0, numCharsRead);
                                     }
 
-                                    try (JsonReader jsonReader = new JsonReader(new StringReader(content))) {
+                                    try (JsonReader jsonReader = new JsonReader(new StringReader(contentBuilder.toString()))) {
                                         return JsonParser.parseReader(jsonReader);
                                     }
                                 }
-                            } else {
-                                continue;
                             }
                         }
                     } else {
@@ -177,9 +171,12 @@ public abstract class ModJsonLoader<K extends SeedResource, T> extends Loader<K,
                     }
                 }
 
-                System.out.println("[NEW PATH]: " + foundPath + " for File " + "Server\\World\\KaupenOres\\" + filePath.replace('.', File.separatorChar) + ".json");
-                try (JsonReader reader = new JsonReader(Files.newBufferedReader(foundPath))) {
-                    var4 = JsonParser.parseReader(reader);
+                if (foundPath != null) {
+                    try (JsonReader reader = new JsonReader(Files.newBufferedReader(foundPath))) {
+                        var4 = JsonParser.parseReader(reader);
+                    }
+                } else {
+                    throw new Error("File not found in any asset pack: " + filePath);
                 }
             } else {
                 // VANILLA JUST READ
@@ -243,12 +240,5 @@ public abstract class ModJsonLoader<K extends SeedResource, T> extends Loader<K,
     ) {
 
         return mustGet(key, this.get(key), defaultValue, type, predicate, mapper);
-    }
-
-    public interface Constants {
-
-        char JSON_FILEPATH_SEPARATOR = '.';
-
-        String KEY_FILE = "File";
     }
 }

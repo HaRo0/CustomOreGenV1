@@ -207,10 +207,13 @@ public class ModCaveTypeJsonLoader extends ModJsonLoader<SeedStringResource, Cav
 
         int environment = Integer.MIN_VALUE;
         if (this.has("Environment")) {
-            String environmentId = this.get("Environment").getAsString();
-            environment = Environment.getAssetMap().getIndex(environmentId);
-            if (environment == Integer.MIN_VALUE) {
-                throw new Error(String.format("Error while looking up environment \"%s\"!", environmentId));
+            JsonElement envElement = this.get("Environment");
+            if (envElement != null && envElement.isJsonPrimitive()) {
+                String environmentId = envElement.getAsString();
+                environment = Environment.getAssetMap().getIndex(environmentId);
+                if (environment == Integer.MIN_VALUE) {
+                    throw new Error(String.format("Error while looking up environment \"%s\"!", environmentId));
+                }
             }
         }
 
@@ -219,61 +222,26 @@ public class ModCaveTypeJsonLoader extends ModJsonLoader<SeedStringResource, Cav
 
     protected boolean loadSurfaceLimited() {
 
-        return !this.has("SurfaceLimited") || this.get("SurfaceLimited").getAsBoolean();
+        if (this.has("SurfaceLimited")) {
+            JsonElement element = this.get("SurfaceLimited");
+            return element != null && element.getAsBoolean();
+        }
+        return true;
     }
 
     protected boolean loadSubmerge() {
 
-        return this.mustGetBool("Submerge", ModCaveTypeJsonLoader.Constants.DEFAULT_SUBMERGE);
+        return this.mustGetBool("Submerge", false);
     }
 
-    protected double loadMaximumSize(@Nonnull IPointGenerator pointGenerator) {
+    protected double loadMaximumSize(@Nullable IPointGenerator pointGenerator) {
 
-        return this.has("MaximumSize") ? this.get("MaximumSize").getAsLong() : MathUtil.fastFloor(pointGenerator.getInterval());
-    }
-
-    public interface Constants {
-
-        String KEY_YAW = "Yaw";
-
-        String KEY_PITCH = "Pitch";
-
-        String KEY_DEPTH = "Depth";
-
-        String KEY_HEIGHT_RADIUS_FACTOR = "HeightRadiusFactor";
-
-        String KEY_ENTRY = "Entry";
-
-        String KEY_ENTRY_POINTS = "EntryPoints";
-
-        String KEY_HEIGHT_THRESHOLDS = "HeightThreshold";
-
-        String KEY_BIOME_MASK = "BiomeMask";
-
-        String KEY_BLOCK_MASK = "BlockMask";
-
-        String KEY_NOISE_MASK = "NoiseMask";
-
-        String KEY_FIXED_ENTRY_HEIGHT = "FixedEntryHeight";
-
-        String KEY_FIXED_ENTRY_HEIGHT_NOISE = "FixedEntryHeightNoise";
-
-        String KEY_FLUID_LEVEL = "FluidLevel";
-
-        String KEY_SURFACE_LIMITTED = "SurfaceLimited";
-
-        String KEY_SUBMERGE = "Submerge";
-
-        String KEY_MAXIMUM_SIZE = "MaximumSize";
-
-        String KEY_ENVIRONMENT = "Environment";
-
-        Boolean DEFAULT_SUBMERGE = Boolean.FALSE;
-
-        String ERROR_NO_ENTRY = "\"Entry\" is not defined. Define an entry node type";
-
-        String ERROR_NO_ENTRY_POINTS = "\"EntryPoints\" is not defined, no spawn information for caves available";
-
-        String ERROR_LOADING_ENVIRONMENT = "Error while looking up environment \"%s\"!";
+        if (this.has("MaximumSize")) {
+            JsonElement element = this.get("MaximumSize");
+            if (element != null && element.isJsonPrimitive()) {
+                return element.getAsLong();
+            }
+        }
+        return pointGenerator != null ? MathUtil.fastFloor(pointGenerator.getInterval()) : 0.0;
     }
 }

@@ -47,13 +47,4 @@ public class ModZonesJsonLoader extends Loader<SeedStringResource, Zone[]> {
 
         return zones;
     }
-
-    public interface Constants {
-
-        String PATH_ZONES = "Zones";
-
-        String FILE_ZONE_MAIN_FILE = "Zone.json";
-
-        String ERROR_LOADING_ZONE = "Error while loading zone \"%s\" for world generator from file.";
-    }
 }

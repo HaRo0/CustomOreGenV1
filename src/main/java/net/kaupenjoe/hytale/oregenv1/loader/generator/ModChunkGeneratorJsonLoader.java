@@ -143,7 +143,7 @@ public class ModChunkGeneratorJsonLoader extends Loader<SeedStringResource, Chun
             }
         } else if (masks.isJsonObject()) {
             JsonObject obj = masks.getAsJsonObject();
-            if (obj.size() == 0) {
+            if (obj.isEmpty()) {
                 builder.put("Mask.png", 1.0);
             } else {
                 for (String key : obj.keySet()) {
@@ -196,40 +196,5 @@ public class ModChunkGeneratorJsonLoader extends Loader<SeedStringResource, Chun
         } catch (Throwable var8) {
             throw new Error(String.format("Failed to read zone configuration file! File: %s", zoneFile), var8);
         }
-    }
-
-    public interface Constants {
-
-        String KEY_WIDTH = "Width";
-
-        String KEY_HEIGHT = "Height";
-
-        String KEY_OFFSET_X = "OffsetX";
-
-        String KEY_OFFSET_Y = "OffsetY";
-
-        String KEY_RANDOMIZER = "Randomizer";
-
-        String KEY_MASKS = "Masks";
-
-        String KEY_PREFAB_STORE = "PrefabStore";
-
-        String OVERRIDE_DATA_FOLDER = "OverrideDataFolder";
-
-        String FILE_WORLD_JSON = "World.json";
-
-        String FILE_ZONES_JSON = "Zones.json";
-
-        String FILE_MASK_JSON = "Mask.json";
-
-        String FILE_MASK_PNG = "Mask.png";
-
-        String ERROR_WORLD_FILE_EXIST = "World configuration file does NOT exist! File not found: %s";
-
-        String ERROR_WORLD_FILE_READ = "World configuration file is NOT readable! File: %s";
-
-        String ERROR_WORLD_JSON_CORRUPT = "Could not read JSON configuration for world. File: %s";
-
-        String ERROR_ZONE_FILE = "Failed to read zone configuration file! File: %s";
     }
 }

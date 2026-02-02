@@ -59,13 +59,4 @@ public class ModCaveTypesJsonLoader extends ModJsonLoader<SeedStringResource, Ca
 
         return jsonObject.get("Name").getAsString();
     }
-
-    public interface Constants {
-
-        String KEY_NAME = "Name";
-
-        String SEED_CAVE_TYPE_SUFFIX = "-%s";
-
-        String ERROR_NOT_AN_ARRAY = "CaveTypes must be a JSON array.";
-    }
 }

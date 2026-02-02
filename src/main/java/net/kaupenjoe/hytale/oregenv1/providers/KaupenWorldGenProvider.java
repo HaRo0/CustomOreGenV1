@@ -19,8 +19,6 @@ import java.nio.file.Path;
 
 public class KaupenWorldGenProvider extends HytaleWorldGenProvider {
 
-    public static final String ID = "Hytale";
-
     public static final BuilderCodec<KaupenWorldGenProvider> CODEC = BuilderCodec.builder(KaupenWorldGenProvider.class, KaupenWorldGenProvider::new)
         .documentation("The standard generator for Hytale.")
         .append(new KeyedCodec<>("Name", Codec.STRING), (config, s) -> config.name = s, config -> config.name)

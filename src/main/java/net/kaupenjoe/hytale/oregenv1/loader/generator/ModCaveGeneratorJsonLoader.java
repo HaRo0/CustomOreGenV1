@@ -43,8 +43,7 @@ public class ModCaveGeneratorJsonLoader extends JsonLoader<SeedStringResource, C
 
         int start = zoneName.indexOf("Zones/") + "Zones/".length();
         int end = zoneName.lastIndexOf("/");
-        String zone = zoneName.substring(start, end);
-        return zone;
+        return zoneName.substring(start, end);
     }
 
     // CAVEMODIFICATION.JSON
@@ -69,9 +68,8 @@ public class ModCaveGeneratorJsonLoader extends JsonLoader<SeedStringResource, C
                     .filter(assetPack -> !assetPack.getName().equals("Hytale:Hytale")).toArray(AssetPack[]::new);
 
                 JsonObject modifiedCaves;
-                JsonArray oreModificationFileList = null;
 
-                // Path to every AssetPack (Path pathToCaveMods : pathsToCaveMods)
+                // Process each asset pack
                 for (AssetPack pack : assetPacks) {
                     if (pack.isImmutable() && pack.getPackLocation().getFileName().toString().toLowerCase().endsWith(".zip")) {
                         try (FileSystem fs = FileSystems.newFileSystem(pack.getPackLocation(), (ClassLoader) null)) {
@@ -79,20 +77,18 @@ public class ModCaveGeneratorJsonLoader extends JsonLoader<SeedStringResource, C
                             if (Files.exists(manifestPath)) {
                                 try (BufferedReader reader = Files.newBufferedReader(manifestPath, StandardCharsets.UTF_8)) {
                                     char[] buffer = RawJsonReader.READ_BUFFER.get();
+                                    StringBuilder contentBuilder = new StringBuilder();
                                     int numCharsRead;
-                                    String content = "";
                                     while ((numCharsRead = reader.read(buffer)) != -1) {
-                                        // Create the string using ONLY the characters that were just read
-                                        content = new String(buffer, 0, numCharsRead);
-                                        System.out.println("[CONTENT]: " + content);
+                                        contentBuilder.append(buffer, 0, numCharsRead);
                                     }
 
-                                    try (JsonReader jsonReader = new JsonReader(new StringReader(content))) {
+                                    try (JsonReader jsonReader = new JsonReader(new StringReader(contentBuilder.toString()))) {
                                         modifiedCaves = JsonParser.parseReader(jsonReader).getAsJsonObject();
                                     }
 
                                     if (modifiedCaves.get(zoneName) != null) {
-                                        oreModificationFileList = modifiedCaves.get(zoneName).getAsJsonArray();
+                                        JsonArray oreModificationFileList = modifiedCaves.get(zoneName).getAsJsonArray();
 
                                         for (JsonElement element : oreModificationFileList) {
                                             cavesJson.get("Types").getAsJsonArray().add(element);
@@ -111,14 +107,12 @@ public class ModCaveGeneratorJsonLoader extends JsonLoader<SeedStringResource, C
                                 modifiedCaves = JsonParser.parseReader(reader).getAsJsonObject();
 
                                 if (modifiedCaves.get(zoneName) != null) {
-                                    oreModificationFileList = modifiedCaves.get(zoneName).getAsJsonArray();
+                                    JsonArray oreModificationFileList = modifiedCaves.get(zoneName).getAsJsonArray();
 
                                     for (JsonElement element : oreModificationFileList) {
                                         cavesJson.get("Types").getAsJsonArray().add(element);
                                     }
                                 }
-
-                                System.out.println("[FINISHED CAVE JSON]: " + cavesJson);
                             }
                         }
                     }
@@ -137,14 +131,5 @@ public class ModCaveGeneratorJsonLoader extends JsonLoader<SeedStringResource, C
     protected CaveType[] loadCaveTypes(@Nonnull JsonObject jsonObject) {
 
         return new ModCaveTypesJsonLoader(this.seed, this.dataFolder, jsonObject.get("Types"), this.caveFolder, this.zoneContext).load();
-    }
-
-    public interface Constants {
-
-        String FILE_CAVES_JSON = "Caves.json";
-
-        String KEY_TYPES = "Types";
-
-        String ERROR_LOADING_CAVES = "Error while loading caves for world generator from %s";
     }
 }
