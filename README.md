@@ -46,16 +46,19 @@ Server/World/CustomOres/
 ### Creating Ore Configurations
 
 ![Asset Editor - Ore Configuration](images/ore-configuration.png)
+
 *Screenshot showing the Asset Editor interface for configuring custom ore veins*
 
 ### Zone Data Management
 
 ![Asset Editor - Zone Data](images/zone-data.png)
+
 *Managing zone-specific ore generation settings through the Asset Editor*
 
 ### Cave Modifications
 
 ![Asset Editor - Cave Modifications](images/cave-modifications.png)
+
 *Editing cave modification settings for ore placement*
 
 ## 🛠️ Installation
@@ -64,6 +67,7 @@ Server/World/CustomOres/
 2. Place the `.jar` file in your Hytale server's `mods/` folder
 3. Start your server to generate default configuration files
 4. Customize the JSON files in `Server/World/CustomOres/` or use the Asset Editor in-game
+5. Use the `/worldgen reload` command to apply changes without restarting the server
 
 ## ⚙️ Configuration
 
