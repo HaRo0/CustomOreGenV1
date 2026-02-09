@@ -4,7 +4,7 @@ import com.hypixel.hytale.assetstore.AssetUpdateQuery;
 import com.hypixel.hytale.builtin.asseteditor.AssetEditorPlugin;
 import com.hypixel.hytale.builtin.asseteditor.AssetPath;
 import com.hypixel.hytale.builtin.asseteditor.EditorClient;
-import com.hypixel.hytale.builtin.asseteditor.assettypehandler.AssetTypeHandler;
+import com.hypixel.hytale.builtin.asseteditor.assettypehandler.JsonTypeHandler;
 import com.hypixel.hytale.codec.lookup.Priority;
 import com.hypixel.hytale.protocol.packets.asseteditor.AssetEditorAssetType;
 import com.hypixel.hytale.protocol.packets.asseteditor.AssetEditorEditorType;
@@ -12,6 +12,7 @@ import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 import com.hypixel.hytale.server.core.universe.world.worldgen.provider.IWorldGenProvider;
 import net.kaupenjoe.hytale.oregenv1.providers.CustomWorldGenProvider;
+import org.bson.BsonDocument;
 import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 
 import java.nio.file.Path;
@@ -38,7 +39,7 @@ public class OregenV1Plugin extends JavaPlugin {
 
     }
 
-    private static class TypeHandler extends AssetTypeHandler {
+    private static class TypeHandler extends JsonTypeHandler {
 
         protected TypeHandler(String id, String path) {
 
@@ -47,6 +48,12 @@ public class OregenV1Plugin extends JavaPlugin {
 
         @Override
         public AssetLoadResult loadAsset(AssetPath var1, Path var2, byte[] var3, AssetUpdateQuery var4, EditorClient var5) {
+
+            return AssetLoadResult.ASSETS_CHANGED;
+        }
+
+        @Override
+        public AssetLoadResult loadAssetFromDocument(AssetPath var1, Path var2, BsonDocument var3, AssetUpdateQuery var4, EditorClient var5) {
 
             return AssetLoadResult.ASSETS_CHANGED;
         }
@@ -66,7 +73,7 @@ public class OregenV1Plugin extends JavaPlugin {
         @Override
         public AssetUpdateQuery getDefaultUpdateQuery() {
 
-            return AssetUpdateQuery.DEFAULT_NO_REBUILD;
+            return AssetUpdateQuery.DEFAULT;
         }
     }
 }
