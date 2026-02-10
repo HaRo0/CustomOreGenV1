@@ -73,7 +73,7 @@ public class OregenV1Plugin extends JavaPlugin {
         @Override
         public AssetUpdateQuery getDefaultUpdateQuery() {
 
-            return AssetUpdateQuery.DEFAULT;
+            return AssetUpdateQuery.DEFAULT_NO_REBUILD;
         }
     }
 }

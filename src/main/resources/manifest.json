@@ -1,7 +1,7 @@
 {
     "Group": "net.kaupenjoe.hytale",
     "Name": "CustomOreGenV1",
-    "Version": "1.0.0",
+    "Version": "1.1.0",
     "Description": "A custom OreGen plugin for Hytale Server, allowing server owners to customize ore generation in their worlds.",
     "Authors": [
         {
