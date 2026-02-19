@@ -2,11 +2,11 @@ plugins {
     id 'java'
     id 'org.jetbrains.gradle.plugin.idea-ext' version '1.3'
     id 'maven-publish'
-    id 'hytale-mod' version '0.+'
+    id 'hytale-mod' version '0.7+'
 }
 
 ext {
-    hytaleHome = "${System.getProperty("user.home")}/AppData/Roaming/Hytale"
+    hytaleHome = project.findProperty("hytale.install_dir")
 }
 
 // Set group and version from properties if not already defined
@@ -40,10 +40,11 @@ repositories {
 // compile against their code. This requires you to have Hytale installed using
 // the official launcher for now.
 dependencies {
+
     implementation(files("$hytaleHome/install/$patchline/package/game/latest/Server/HytaleServer.jar"))
+
     // Optional compileOnly assets handling adapted from provided snippet
-    def appData = System.getenv('APPDATA') ?: ''
-    def hytaleAssets = file("${appData}/Hytale/install/release/package/game/latest/Assets.zip")
+    def hytaleAssets = file("${hytaleHome}/install/release/package/game/latest/Assets.zip")
     if (hytaleAssets.exists()) {
         compileOnly(files(hytaleAssets))
     } else {
@@ -81,19 +82,8 @@ tasks.register('updatePluginManifest') {
     }
 }
 
-// Creates a run configuration in IDEA that will run the Hytale server with
-// your plugin and the default assets.
-// Guarded creation/update to avoid duplicate run-configuration errors
-def runConfs = idea.project.settings.runConfigurations
 
-// Previously we attempted to create an IDEA run configuration here. That
-// can fail during Gradle configuration if the IDE workspace already has a
-// run configuration with the same name. We avoid touching IDEA run
-// configurations during the Gradle configuration phase to keep the build
-// stable. Instead we compute the program parameters string that IDE configs
-// or external scripts can reuse.
-
-def programParamsBase = "--allow-op --assets=${file("$hytaleHome/install/$patchline/package/game/latest/Assets.zip").absolutePath}"
+def programParamsBase = " --allow-op --assets=${file("$hytaleHome/install/$patchline/package/game/latest/Assets.zip").absolutePath}"
 if (includes_pack.toBoolean()) {
     programParamsBase += " --mods=${sourceSets.main.java.srcDirs.first().parentFile.absolutePath}"
 }
@@ -101,14 +91,6 @@ if (load_user_mods.toBoolean()) {
     programParamsBase += " --mods=$hytaleHome/UserData/Mods"
 }
 
-// If you want an IDEA run configuration created automatically, use a separate
-// helper script or create it manually in the IDE. Leaving IDE workspace files
-// untouched avoids configuration-time failures.
-
-// hytale plugin placeholder
-hytale {
-    // plugin-specific configuration can be added here
-}
 
 // Jar manifest attributes similar to provided build snippet
 tasks.withType(Jar) {
@@ -144,11 +126,13 @@ idea {
     }
 }
 
-// Add sourceSets exclusion so the in-repo com.hypixel sources (decompiled/stub API) are not compiled
-sourceSets {
-    main {
-        java {
-            exclude 'com/hypixel/**'
+// Configure the HytaleServer run configuration after the hytale-mod plugin creates it
+afterEvaluate {
+    idea.project.settings.runConfigurations {
+        def hytaleServer = findByName('runServer')
+        if (hytaleServer != null) {
+            hytaleServer.programParamsBase = ""// hytaleServer.programParamsBase + programParamsBase
         }
     }
 }
+

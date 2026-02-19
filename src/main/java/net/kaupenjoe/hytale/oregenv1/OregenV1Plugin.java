@@ -20,6 +20,8 @@ import java.nio.file.Path;
 public class OregenV1Plugin extends JavaPlugin {
 
     public static OregenV1Plugin INSTANCE;
+    public static final Path CaveModificationsPath = Path.of("Server/World/CustomOres/CaveModifications");
+    public static final Path ZoneDataPath = Path.of("Server/World/CustomOres/Ores");
 
     public OregenV1Plugin(@NonNullDecl JavaPluginInit init) {
 
@@ -34,8 +36,8 @@ public class OregenV1Plugin extends JavaPlugin {
         IWorldGenProvider.CODEC.remove(defaultProvider);
         IWorldGenProvider.CODEC.register(Priority.DEFAULT.before(1), "Hytale", CustomWorldGenProvider.class, CustomWorldGenProvider.CODEC);
 
-        AssetEditorPlugin.get().getAssetTypeRegistry().registerAssetType(new TypeHandler("CaveModifications", "Server/World/CustomOres/CaveModifications"));
-        AssetEditorPlugin.get().getAssetTypeRegistry().registerAssetType(new TypeHandler("ZoneData", "Server/World/CustomOres/Ores"));
+        AssetEditorPlugin.get().getAssetTypeRegistry().registerAssetType(new TypeHandler("CaveModifications", CaveModificationsPath.toString()));
+        AssetEditorPlugin.get().getAssetTypeRegistry().registerAssetType(new TypeHandler("ZoneData", ZoneDataPath.toString()));
 
     }
 

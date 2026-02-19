@@ -7,6 +7,8 @@ import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
 import com.hypixel.hytale.assetstore.AssetPack;
 import com.hypixel.hytale.codec.util.RawJsonReader;
+import com.hypixel.hytale.procedurallib.file.AssetPath;
+import com.hypixel.hytale.procedurallib.file.FileIO;
 import com.hypixel.hytale.procedurallib.json.JsonLoader;
 import com.hypixel.hytale.procedurallib.json.SeedString;
 import com.hypixel.hytale.server.core.asset.AssetModule;
@@ -52,78 +54,83 @@ public class ModCaveGeneratorJsonLoader extends JsonLoader<SeedStringResource, C
     public CaveGenerator load() {
 
         CaveGenerator caveGenerator = null;
-        if (this.caveFolder != null && Files.exists(this.caveFolder)) {
-            Path file = this.caveFolder.resolve("Caves.json");
+        if (this.caveFolder == null) return null;
 
-            try {
-                JsonObject cavesJson;
-                try (JsonReader reader = new JsonReader(Files.newBufferedReader(file))) {
-                    cavesJson = JsonParser.parseReader(reader).getAsJsonObject();
-                }
-                String zoneName = getZoneName(this.caveFolder.toString());
+        AssetPath assetPath = FileIO.resolve(this.caveFolder.resolve("Caves.json"));
+        if (!FileIO.exists(assetPath)) {
+            return null;
+        }
 
-                // Modifying the JSONObject itself and adding All Packs custom things
-                // Path pathToCaveMods = AssetModule.get().getAssetPack("Lexih:TestPlugin");
+        try {
+            JsonObject cavesJson = FileIO.load(assetPath, JsonLoader.JSON_OBJ_LOADER);
 
-                AssetPack[] assetPacks = AssetModule.get().getAssetPacks().stream()
-                    .filter(assetPack -> !assetPack.getName().equals("Hytale:Hytale") && !assetPack.getName().equals(OregenV1Plugin.INSTANCE.getName())).toArray(AssetPack[]::new);
 
-                JsonObject modifiedCaves;
+            String zoneName = getZoneName(this.caveFolder.toString());
 
-                // Process each asset pack
-                for (AssetPack pack : assetPacks) {
-                    if (pack.isImmutable() && pack.getPackLocation().getFileName().toString().toLowerCase().endsWith(".zip")) {
-                        try (FileSystem fs = FileSystems.newFileSystem(pack.getPackLocation(), (ClassLoader) null)) {
-                            Path manifestPath = fs.getPath("Server\\World\\CustomOres\\CaveModifications\\CaveModifications.json");
-                            if (Files.exists(manifestPath)) {
-                                try (BufferedReader reader = Files.newBufferedReader(manifestPath, StandardCharsets.UTF_8)) {
-                                    char[] buffer = RawJsonReader.READ_BUFFER.get();
-                                    StringBuilder contentBuilder = new StringBuilder();
-                                    int numCharsRead;
-                                    while ((numCharsRead = reader.read(buffer)) != -1) {
-                                        contentBuilder.append(buffer, 0, numCharsRead);
-                                    }
+            var modPath = OregenV1Plugin.CaveModificationsPath;
 
-                                    try (JsonReader jsonReader = new JsonReader(new StringReader(contentBuilder.toString()))) {
-                                        modifiedCaves = JsonParser.parseReader(jsonReader).getAsJsonObject();
-                                    }
+            AssetPack[] assetPacks = AssetModule.get().getAssetPacks().stream()
+                .filter(assetPack -> !assetPack.getName().equals("Hytale:Hytale") && !assetPack.getName().equals(OregenV1Plugin.INSTANCE.getName())).toArray(AssetPack[]::new);
 
-                                    if (modifiedCaves.get(zoneName) != null) {
-                                        JsonArray oreModificationFileList = modifiedCaves.get(zoneName).getAsJsonArray();
 
-                                        for (JsonElement element : oreModificationFileList) {
-                                            cavesJson.get("Types").getAsJsonArray().add(element);
-                                        }
-                                    }
+            JsonObject modifiedCaves;
 
+            // Process each asset pack
+            for (AssetPack pack : assetPacks) {
+                if (pack.isImmutable() && pack.getPackLocation().getFileName().toString().toLowerCase().endsWith(".zip")) {
+                    try (FileSystem fs = FileSystems.newFileSystem(pack.getPackLocation(), (ClassLoader) null)) {
+                        Path manifestPath = fs.getPath(modPath.resolve("CaveModifications.json").toString());
+                        if (Files.exists(manifestPath)) {
+                            try (BufferedReader reader = Files.newBufferedReader(manifestPath, StandardCharsets.UTF_8)) {
+                                char[] buffer = RawJsonReader.READ_BUFFER.get();
+                                StringBuilder contentBuilder = new StringBuilder();
+                                int numCharsRead;
+                                while ((numCharsRead = reader.read(buffer)) != -1) {
+                                    contentBuilder.append(buffer, 0, numCharsRead);
                                 }
-                            }
-                        }
-                    } else {
-                        // Normal Way (NON ZIP)
-                        var path = pack.getPackLocation()
-                            .resolve("Server\\World\\CustomOres\\CaveModifications\\CaveModifications.json");
-                        if (path.toFile().exists()) {
-                            try (JsonReader reader = new JsonReader(Files.newBufferedReader(path))) {
-                                modifiedCaves = JsonParser.parseReader(reader).getAsJsonObject();
+
+                                try (JsonReader jsonReader = new JsonReader(new StringReader(contentBuilder.toString()))) {
+                                    modifiedCaves = JsonParser.parseReader(jsonReader).getAsJsonObject();
+                                }
 
                                 if (modifiedCaves.get(zoneName) != null) {
                                     JsonArray oreModificationFileList = modifiedCaves.get(zoneName).getAsJsonArray();
 
                                     for (JsonElement element : oreModificationFileList) {
+
                                         cavesJson.get("Types").getAsJsonArray().add(element);
                                     }
+                                }
+
+                            }
+                        }
+                    }
+                } else {
+                    // Normal Way (NON ZIP)
+                    var path = pack.getPackLocation()
+                        .resolve(modPath.resolve("CaveModifications.json").toString());
+                    if (path.toFile().exists()) {
+                        try (JsonReader reader = new JsonReader(Files.newBufferedReader(path))) {
+                            modifiedCaves = JsonParser.parseReader(reader).getAsJsonObject();
+
+                            if (modifiedCaves.get(zoneName) != null) {
+                                JsonArray oreModificationFileList = modifiedCaves.get(zoneName).getAsJsonArray();
+
+                                for (JsonElement element : oreModificationFileList) {
+                                    cavesJson.get("Types").getAsJsonArray().add(element);
                                 }
                             }
                         }
                     }
                 }
 
+            }
+
                 caveGenerator = new CaveGenerator(this.loadCaveTypes(cavesJson));
             } catch (Throwable var9) {
-                throw new Error(String.format("Error while loading caves for world generator from %s", file), var9);
+                throw new Error(String.format("Error while loading caves for world generator from %s", assetPath.toString()), var9);
             }
-        }
+
 
         return caveGenerator;
     }

@@ -1,14 +1,18 @@
 package net.kaupenjoe.hytale.oregenv1.loader.zone;
 
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
+import com.hypixel.hytale.procedurallib.file.FileIO;
+import com.hypixel.hytale.procedurallib.json.JsonLoader;
 import com.hypixel.hytale.procedurallib.json.Loader;
 import com.hypixel.hytale.procedurallib.json.SeedString;
 import com.hypixel.hytale.server.worldgen.SeedStringResource;
 import com.hypixel.hytale.server.worldgen.loader.context.FileContext;
 import com.hypixel.hytale.server.worldgen.loader.context.FileLoadingContext;
 import com.hypixel.hytale.server.worldgen.loader.context.ZoneFileContext;
+import com.hypixel.hytale.server.worldgen.loader.zone.ZoneJsonLoader;
 import com.hypixel.hytale.server.worldgen.zone.Zone;
 
 import javax.annotation.Nonnull;
@@ -36,12 +40,12 @@ public class ModZonesJsonLoader extends Loader<SeedStringResource, Zone[]> {
         for (Entry<String, ZoneFileContext> zoneEntry : zoneRegistry) {
             ZoneFileContext zoneContext = zoneEntry.getValue();
 
-            try (JsonReader reader = new JsonReader(Files.newBufferedReader(zoneContext.getPath().resolve("Zone.json")))) {
-                JsonElement zoneJson = JsonParser.parseReader(reader);
+            try {
+                JsonObject zoneJson = FileIO.load(zoneContext.getPath().resolve("Zone.json"), JsonLoader.JSON_OBJ_LOADER);
                 Zone zone = new ModZoneJsonLoader(this.seed, this.dataFolder, zoneJson, zoneContext).load();
                 zones[index++] = zone;
-            } catch (Throwable var12) {
-                throw new Error(String.format("Error while loading zone \"%s\" for world generator from file.", zoneContext.getPath().toString()), var12);
+            } catch (Throwable var9) {
+                throw new Error(String.format("Error while loading zone \"%s\" for world generator from file.", zoneContext.getPath().toString()), var9);
             }
         }
 

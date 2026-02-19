@@ -3,16 +3,20 @@ package net.kaupenjoe.hytale.oregenv1.loader.type;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.hypixel.hytale.procedurallib.json.JsonLoader;
 import com.hypixel.hytale.procedurallib.json.SeedString;
 import com.hypixel.hytale.server.worldgen.SeedStringResource;
 import com.hypixel.hytale.server.worldgen.cave.CaveType;
 import com.hypixel.hytale.server.worldgen.loader.context.ZoneFileContext;
-import net.kaupenjoe.hytale.oregenv1.loader.ModJsonLoader;
+import net.kaupenjoe.hytale.oregenv1.loader.CustomFileLoader;
+import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 
 import javax.annotation.Nonnull;
+import java.io.FileNotFoundException;
 import java.nio.file.Path;
+import java.util.ArrayList;
 
-public class ModCaveTypesJsonLoader extends ModJsonLoader<SeedStringResource, CaveType[]> {
+public class ModCaveTypesJsonLoader extends JsonLoader<SeedStringResource, CaveType[]> {
 
     protected final Path caveFolder;
 
@@ -30,29 +34,43 @@ public class ModCaveTypesJsonLoader extends ModJsonLoader<SeedStringResource, Ca
 
         if (this.json != null && this.json.isJsonArray()) {
             JsonArray typesArray = this.json.getAsJsonArray();
-            CaveType[] caveTypes = new CaveType[typesArray.size()];
+            ArrayList<CaveType> caveTypes = new ArrayList<>();
 
             for (int i = 0; i < typesArray.size(); i++) {
                 JsonElement entry = this.getOrLoad(typesArray.get(i));
-                if (!entry.isJsonObject()) {
-                    throw error("Expected CaveType entry to be a JsonObject at index: %d", i);
+                if (entry == null || !entry.isJsonObject()) {
+                    continue;
                 }
 
                 JsonObject caveTypeJson = entry.getAsJsonObject();
-                String name = this.loadName(caveTypeJson);
-                caveTypes[i] = this.loadCaveType(name, caveTypeJson); // ISSUE
+                try {
+                    String name = this.loadName(caveTypeJson);
+                    var type = this.loadCaveType(name, caveTypeJson);
+                    if (type != null) caveTypes.add(type); // ISSUE
+                } catch (Exception e) {
+                    System.err.println(e.getMessage());
+                }
             }
 
-            return caveTypes;
+            return caveTypes.toArray(CaveType[]::new);
         } else {
             throw new IllegalArgumentException("CaveTypes must be a JSON array.");
         }
     }
 
-    @Nonnull
+    @Override
+    protected JsonElement loadFile(@NonNullDecl String filePath){
+        return CustomFileLoader.loadFile(filePath, this.dataFolder);
+    }
+
     protected CaveType loadCaveType(String name, JsonElement json) {
 
-        return new ModCaveTypeJsonLoader(this.seed.append(String.format("-%s", name)), this.dataFolder, json, this.caveFolder, name, this.zoneContext).load();
+        try {
+            return new ModCaveTypeJsonLoader(this.seed.append(String.format("-%s", name)), this.dataFolder, json, this.caveFolder, name, this.zoneContext).load();
+        }catch (Throwable e){
+            System.err.println(e.getMessage());
+        }
+        return null;
     }
 
     protected String loadName(@Nonnull JsonObject jsonObject) {
