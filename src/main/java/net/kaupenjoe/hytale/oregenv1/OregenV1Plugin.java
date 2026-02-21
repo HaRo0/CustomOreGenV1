@@ -20,13 +20,16 @@ import java.nio.file.Path;
 public class OregenV1Plugin extends JavaPlugin {
 
     public static OregenV1Plugin INSTANCE;
-    public static final Path CaveModificationsPath = Path.of("Server/World/CustomOres/CaveModifications");
-    public static final Path ZoneDataPath = Path.of("Server/World/CustomOres/Ores");
+    private static final String CaveModifactionsPathString = "Server/World/CustomOres/CaveModifications";
+    private static final String ZoneDataPathString = "Server/World/CustomOres/Ores";
+    public static final Path CaveModificationsPath = Path.of(CaveModifactionsPathString);
+    public static final Path ZoneDataPath = Path.of(ZoneDataPathString);
 
     public OregenV1Plugin(@NonNullDecl JavaPluginInit init) {
 
         super(init);
         INSTANCE = this;
+
     }
 
     @Override
@@ -36,8 +39,8 @@ public class OregenV1Plugin extends JavaPlugin {
         IWorldGenProvider.CODEC.remove(defaultProvider);
         IWorldGenProvider.CODEC.register(Priority.DEFAULT.before(1), "Hytale", CustomWorldGenProvider.class, CustomWorldGenProvider.CODEC);
 
-        AssetEditorPlugin.get().getAssetTypeRegistry().registerAssetType(new TypeHandler("CaveModifications", CaveModificationsPath.toString()));
-        AssetEditorPlugin.get().getAssetTypeRegistry().registerAssetType(new TypeHandler("ZoneData", ZoneDataPath.toString()));
+        AssetEditorPlugin.get().getAssetTypeRegistry().registerAssetType(new TypeHandler("CaveModifications", CaveModifactionsPathString));
+        AssetEditorPlugin.get().getAssetTypeRegistry().registerAssetType(new TypeHandler("ZoneData", ZoneDataPathString));
 
     }
 
